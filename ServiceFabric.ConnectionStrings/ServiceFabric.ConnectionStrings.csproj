@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>NickDarvey.ServiceFabric.ConnectionStrings</AssemblyName>
+    <RootNamespace>NickDarvey.ServiceFabric.ConnectionStrings</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Nick Darvey</Authors>
+    <Company>Nick Darvey</Company>
+    <Product>ServiceFabric.ConnectionStrings</Product>
+    <Description>ServiceFabric.ConnectionStrings lets you build connection strings which encapsulate a Service Fabric service's address and partitioning information in a single, easily injectible, string.</Description>
+    <PackageLicenseUrl>https://github.com/NickDarvey/ServiceFabric.ConnectionStrings/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/NickDarvey/ServiceFabric.ConnectionStrings</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/NickDarvey/ServiceFabric.ConnectionStrings</RepositoryUrl>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+</Project>
