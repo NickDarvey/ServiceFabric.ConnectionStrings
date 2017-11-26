@@ -3,7 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabric.ConnectionStrings", "ServiceFabric.ConnectionStrings\ServiceFabric.ConnectionStrings.csproj", "{72957389-0C17-48DD-B69C-0942764D72F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceFabric.ConnectionStrings", "ServiceFabric.ConnectionStrings\ServiceFabric.ConnectionStrings.csproj", "{72957389-0C17-48DD-B69C-0942764D72F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C803EBEF-31E7-4127-A0FD-2A2301A7BD51}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
