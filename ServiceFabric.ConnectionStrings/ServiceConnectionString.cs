@@ -8,6 +8,9 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
     {
         private const string ServiceUriKey = "ServiceUri";
         private const string PartitionKindKey = "PartitionKind";
+        private const string PartitionKindInt64RangeValue = "Int64Range";
+        private const string PartitionKindNamedValue = "Named";
+        private const string PartitionKindSingletonValue = "Singleton";
         private const string PartitionCountKey = "PartitionCount";
         private const string PartitionAlgorithmKey = "PartitionAlgorithm";
 
@@ -22,20 +25,30 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
 
         internal ServiceConnectionString(IReadOnlyDictionary<string, string> connectionStringParts)
         {
-            if (!connectionStringParts.ContainsKey(ServiceUriKey))
-                throw new ArgumentException("A " + ServiceUriKey + " is required.");
+            if (connectionStringParts.ContainsKey(ServiceUriKey) == false)
+                throw new ArgumentException($"A {ServiceUriKey} is required.");
 
-            if (!connectionStringParts.ContainsKey(PartitionKindKey))
-                throw new ArgumentException("A " + PartitionKindKey + " is required.");
+            if (Uri.TryCreate(connectionStringParts[ServiceUriKey], UriKind.RelativeOrAbsolute, out var _) == false)
+                throw new ArgumentException($"'{connectionStringParts[ServiceUriKey]}' is not a valid URI.");
 
-            if (!connectionStringParts.ContainsKey(PartitionCountKey))
-                throw new ArgumentException("A " + PartitionCountKey + " is required.");
 
-            if (!Uri.TryCreate(connectionStringParts[ServiceUriKey], UriKind.Absolute, out var _))
-                throw new ArgumentException($"'{connectionStringParts[ServiceUriKey]}' is not a valid absolute URI.");
+            if (connectionStringParts.ContainsKey(PartitionKindKey) == false)
+                throw new ArgumentException($"A {PartitionKindKey} is required.");
 
-            if (!int.TryParse(connectionStringParts[PartitionCountKey], out var _))
+            if (connectionStringParts[PartitionKindKey] != PartitionKindInt64RangeValue &&
+                connectionStringParts[PartitionKindKey] != PartitionKindNamedValue &&
+                connectionStringParts[PartitionKindKey] != PartitionKindSingletonValue)
+                throw new ArgumentException($"A {PartitionKindKey} must be either '{PartitionKindInt64RangeValue}', '{PartitionKindNamedValue}' or '{PartitionKindSingletonValue}'.");
+
+
+            if (connectionStringParts[PartitionKindKey] == PartitionKindInt64RangeValue &&
+                connectionStringParts.ContainsKey(PartitionCountKey) == false)
+                throw new ArgumentException($"A {PartitionCountKey} is required when the {PartitionKindKey} is '{connectionStringParts[PartitionKindKey]}'.");
+
+            if (connectionStringParts.ContainsKey(PartitionCountKey) &&
+                int.TryParse(connectionStringParts[PartitionCountKey], out var _) == false)
                 throw new ArgumentException($"'{connectionStringParts[PartitionCountKey]}' is not a valid integer.");
+
 
             ConnectionStringParts = connectionStringParts;
         }
