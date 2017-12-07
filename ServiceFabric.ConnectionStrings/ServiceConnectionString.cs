@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NickDarvey.ServiceFabric.ConnectionStrings
 {
-    public class ServiceConnectionString
+    public class ServiceConnectionString : IEquatable<ServiceConnectionString>
     {
         private const string ServiceUriKey = "ServiceUri";
         private const string PartitionKindKey = "PartitionKind";
@@ -16,42 +16,47 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
 
         private static readonly IEqualityComparer<string> KeyComparer = StringComparer.InvariantCultureIgnoreCase;
 
+        private readonly string ConnectionString;
+
         public Uri ServiceUri { get; }
         public string PartitionKind { get; }
         public int PartitionCount { get; }
         public string PartitionAlgorithm { get; }
 
-        internal ServiceConnectionString(IReadOnlyDictionary<string, string> connectionStringParts)
+        internal ServiceConnectionString(string connectionString)
         {
+            ConnectionString = connectionString;
+
+            var parts = connectionString.Split(';')
+                .Select(t => t.Split(new char[] { '=' }, 2))
+                .ToDictionary(t => t[0].Trim(), t => t[1].Trim(), KeyComparer);
+
             ServiceUri =
-                connectionStringParts.ContainsKey(ServiceUriKey) == false ? throw new ArgumentException($"A {ServiceUriKey} is required.")
-                : Uri.TryCreate(connectionStringParts[ServiceUriKey], UriKind.RelativeOrAbsolute, out var serviceUri) == false ? throw new ArgumentException($"'{connectionStringParts[ServiceUriKey]}' is not a valid URI.")
+                parts.ContainsKey(ServiceUriKey) == false ? throw new ArgumentException($"A {ServiceUriKey} is required.")
+                : Uri.TryCreate(parts[ServiceUriKey], UriKind.RelativeOrAbsolute, out var serviceUri) == false ? throw new ArgumentException($"'{parts[ServiceUriKey]}' is not a valid URI.")
                 : serviceUri;
 
             PartitionKind =
-                connectionStringParts.ContainsKey(PartitionKindKey) == false ? throw new ArgumentException($"A {PartitionKindKey} is required.")
-                : connectionStringParts[PartitionKindKey] != PartitionKindInt64RangeValue &&
-                  connectionStringParts[PartitionKindKey] != PartitionKindNamedValue &&
-                  connectionStringParts[PartitionKindKey] != PartitionKindSingletonValue ? throw new ArgumentException($"A {PartitionKindKey} must be '{PartitionKindInt64RangeValue}', '{PartitionKindNamedValue}' or '{PartitionKindSingletonValue}'.")
-                : connectionStringParts[PartitionKindKey];
+                parts.ContainsKey(PartitionKindKey) == false ? throw new ArgumentException($"A {PartitionKindKey} is required.")
+                : parts[PartitionKindKey] != PartitionKindInt64RangeValue &&
+                  parts[PartitionKindKey] != PartitionKindNamedValue &&
+                  parts[PartitionKindKey] != PartitionKindSingletonValue ? throw new ArgumentException($"A {PartitionKindKey} must be '{PartitionKindInt64RangeValue}', '{PartitionKindNamedValue}' or '{PartitionKindSingletonValue}'.")
+                : parts[PartitionKindKey];
 
             PartitionCount =
-                connectionStringParts.ContainsKey(PartitionCountKey) == false &&
-                connectionStringParts[PartitionKindKey] == PartitionKindInt64RangeValue ? throw new ArgumentException($"A {PartitionCountKey} is required when the {PartitionKindKey} is '{connectionStringParts[PartitionKindKey]}'.")
-                : connectionStringParts.ContainsKey(PartitionCountKey) == false ? -1
-                : int.TryParse(connectionStringParts[PartitionCountKey], out var partitionCount) == false ? throw new ArgumentException($"'{connectionStringParts[PartitionCountKey]}' is not a valid integer.")
+                parts.ContainsKey(PartitionCountKey) == false &&
+                parts[PartitionKindKey] == PartitionKindInt64RangeValue ? throw new ArgumentException($"A {PartitionCountKey} is required when the {PartitionKindKey} is '{parts[PartitionKindKey]}'.")
+                : parts.ContainsKey(PartitionCountKey) == false ? -1
+                : int.TryParse(parts[PartitionCountKey], out var partitionCount) == false ? throw new ArgumentException($"'{parts[PartitionCountKey]}' is not a valid integer.")
                 : partitionCount;
 
             PartitionAlgorithm =
-                connectionStringParts.TryGetValue(PartitionAlgorithmKey, out var partitionAlgorithm) == false ? default(string)
+                parts.TryGetValue(PartitionAlgorithmKey, out var partitionAlgorithm) == false ? default(string)
                 : partitionAlgorithm;
         }
 
         public static ServiceConnectionString Parse(string s) =>
-            new ServiceConnectionString(
-            s.Split(';')
-            .Select(t => t.Split(new char[] { '=' }, 2))
-            .ToDictionary(t => t[0].Trim(), t => t[1].Trim(), KeyComparer));
+            new ServiceConnectionString(s);
 
         public static bool TryParse(string s, out ServiceConnectionString result)
         {
@@ -69,5 +74,32 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
 
         public static explicit operator ServiceConnectionString(string s) =>
             Parse(s);
+
+        public bool Equals(ServiceConnectionString other) =>
+            ServiceUri == other?.ServiceUri &&
+            PartitionKind == other?.PartitionKind &&
+            PartitionCount == other?.PartitionCount &&
+            PartitionAlgorithm == other?.PartitionAlgorithm;
+
+        public override bool Equals(object other) =>
+            other is ServiceConnectionString o
+            ? Equals(o) : false;
+
+        public static bool operator ==(ServiceConnectionString lhs, ServiceConnectionString rhs) =>
+            lhs.Equals(rhs);
+
+        public static bool operator !=(ServiceConnectionString lhs, ServiceConnectionString rhs) =>
+            !lhs.Equals(rhs);
+
+        public override int GetHashCode() =>
+            new
+            {
+                ServiceUri = ServiceUri,
+                PartitionKind = PartitionKind,
+                PartitionCount = PartitionCount,
+                PartitionAlgorithm = PartitionAlgorithm
+            }.GetHashCode();
+
+        public override string ToString() => ConnectionString;
     }
 }
