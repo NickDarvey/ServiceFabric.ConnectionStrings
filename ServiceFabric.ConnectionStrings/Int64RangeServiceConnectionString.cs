@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NickDarvey.ServiceFabric.ConnectionStrings
 {
@@ -10,12 +8,10 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
         private const string PartitionKindInt64RangeValue = "Int64Range";
         private const string PartitionLowKeyKey = "PartitionLowKey";
         private const string PartitionHighKeyKey = "PartitionHighKey";
-        private const string PartitionCountKey = "PartitionCount";
         private const string PartitionAlgorithmKey = "PartitionAlgorithm";
 
         public long PartitionLowKey { get; }
         public long PartitionHighKey { get; }
-        public int PartitionCount { get; }
         public string PartitionAlgorithm { get; }
 
         public Int64RangeServiceConnectionString(
@@ -26,7 +22,6 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
             string partitionAlgorithm) : this(
             partitionLowKey: partitionLowKey,
             partitionHighKey: partitionHighKey,
-            partitionCount: partitionCount,
             partitionAlgorithm: partitionAlgorithm,
             parts: new ServiceConnectionString(serviceUri, PartitionKindInt64RangeValue))
         { }
@@ -34,7 +29,6 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
         internal Int64RangeServiceConnectionString(
             long partitionLowKey,
             long partitionHighKey,
-            int partitionCount,
             string partitionAlgorithm,
             ServiceConnectionString parts)
             : base(parts)
@@ -42,9 +36,6 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
             PartitionLowKey = partitionLowKey;
 
             PartitionHighKey = partitionHighKey;
-
-            PartitionCount = partitionCount > 0
-                ? partitionCount : throw new ArgumentOutOfRangeException(nameof(PartitionCountKey), $"The {PartitionCountKey} must be between '1' and '{int.MaxValue}'");
 
             PartitionAlgorithm = !string.IsNullOrWhiteSpace(partitionAlgorithm)
                 ? partitionAlgorithm : throw new ArgumentException("A partition algorithm must be defined");
@@ -77,16 +68,11 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
                 : long.TryParse(parts[PartitionHighKeyKey], out var highKey) == false ? throw new ArgumentException($"'{parts[PartitionHighKeyKey]}' is not a valid long.")
                 : highKey;
 
-            var partitionCount =
-                parts.ContainsKey(PartitionCountKey) == false ? throw new ArgumentException($"A {PartitionCountKey} is required when the {nameof(PartitionKind)} is '{PartitionKindInt64RangeValue}'.")
-                : int.TryParse(parts[PartitionCountKey], out var count) == false ? throw new ArgumentException($"'{parts[PartitionCountKey]}' is not a valid integer.")
-                : count;
-
             var partitionAlgorithm =
                 parts.TryGetValue(PartitionAlgorithmKey, out var algorithm) == false ? default
                 : algorithm;
 
-            return new Int64RangeServiceConnectionString(partitionLowKey, partitionHighKey, partitionCount, partitionAlgorithm, parts);
+            return new Int64RangeServiceConnectionString(partitionLowKey, partitionHighKey, partitionAlgorithm, parts);
         }
 
         public static explicit operator Int64RangeServiceConnectionString(string s) =>
