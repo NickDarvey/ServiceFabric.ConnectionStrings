@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <RootNamespace>NickDarvey.ServiceFabric.ConnectionStrings</RootNamespace>
+    <AssemblyName>NickDarvey.ServiceFabric.ConnectionStrings.PowerShell</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Management.Automation" Version="6.1.7601.17515" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceFabric.ConnectionStrings\ServiceFabric.ConnectionStrings.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NickDarvey.ServiceFabric.ConnectionStrings.psd1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

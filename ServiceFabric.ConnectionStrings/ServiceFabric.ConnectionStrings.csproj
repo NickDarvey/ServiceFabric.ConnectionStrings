@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard1.1</TargetFramework>
     <AssemblyName>NickDarvey.ServiceFabric.ConnectionStrings</AssemblyName>
     <RootNamespace>NickDarvey.ServiceFabric.ConnectionStrings</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -14,10 +14,7 @@
     <RepositoryUrl>https://github.com/NickDarvey/ServiceFabric.ConnectionStrings</RepositoryUrl>
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
     <Version>1.0.0</Version>
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 

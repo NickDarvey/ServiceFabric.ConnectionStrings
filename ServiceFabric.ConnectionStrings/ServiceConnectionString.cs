@@ -13,7 +13,7 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
         private const string PartitionKindNamedValue = "Named";
         private const string PartitionKindSingletonValue = "Singleton";
 
-        private static readonly IEqualityComparer<string> KeyComparer = StringComparer.InvariantCultureIgnoreCase;
+        private static readonly IEqualityComparer<string> KeyComparer = StringComparer.OrdinalIgnoreCase;
 
         public Uri ServiceUri { get; }
         public string PartitionKind { get; }
