@@ -16,6 +16,7 @@
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <LangVersion>latest</LangVersion>
+    <PackageIconUrl>https://raw.githubusercontent.com/NickDarvey/Brand/master/Logos/NickDarvey.Dark.512.png</PackageIconUrl>
   </PropertyGroup>
 
 </Project>
