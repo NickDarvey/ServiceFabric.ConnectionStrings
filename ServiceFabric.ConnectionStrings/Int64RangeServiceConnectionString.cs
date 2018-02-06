@@ -17,8 +17,7 @@ namespace NickDarvey.ServiceFabric.ConnectionStrings
         public Int64RangeServiceConnectionString(
             Uri serviceUri,
             long partitionLowKey,
-            long partitionHighKey,
-            int partitionCount,
+            long partitionHighKey,,
             string partitionAlgorithm) : this(
             partitionLowKey: partitionLowKey,
             partitionHighKey: partitionHighKey,
