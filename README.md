@@ -11,7 +11,7 @@ Install-Package NickDarvey.ServiceFabric.ConnectionStrings
 
 ### Usage
 ```csharp
-var connectionStringString = "PartitionLowKey=0;PartitionHighKey=31;PartitionKind=Int64Range;PartitionAlgorithm=Fnv;ServiceUri=fabric:/MyApp/MyService";
+var connectionStringString = "PartitionLowKey=0;PartitionHighKey=31;PartitionKind=Int64Range;PartitionAlgorithm=MyApp:Fnv;ServiceUri=fabric:/MyApp/MyService";
 
 var connectionStringFromParams = new Int64RangeServiceConnectionString(
     serviceUri: new Uri("fabric:/MyApp/MyService"),
@@ -41,13 +41,13 @@ Install-Module -Name NickDarvey.ServiceFabric.ConnectionStrings -Scope CurrentUs
 $serviceConfiguration = @{
     ServiceUri = "fabric:/MyApp/MyService";
     PartitionKind = "Int64Range";
-    PartitionAlgorithm = "Fnv";
+    PartitionAlgorithm = "MyApp:Fnv";
     LowKey = 0;
     HighKey = 31;
 }
 
 $connectionString = ConvertTo-ServiceConnectionString $serviceConfiguration
-"PartitionAlgorithm=Fnv;HighKey=31;LowKey=0;ServiceUri=fabric:/MyApp/MyService;PartitionKind=Int64Range" -eq $connectionString.ToString()
+"PartitionAlgorithm=MyApp:Fnv;HighKey=31;LowKey=0;ServiceUri=fabric:/MyApp/MyService;PartitionKind=Int64Range" -eq $connectionString.ToString()
 
 >True
 ```
