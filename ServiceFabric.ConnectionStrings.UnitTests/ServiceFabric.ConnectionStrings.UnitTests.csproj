@@ -2,11 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <AssemblyName>NickDarvey.ServiceFabric.ConnectionStrings.UnitTests</AssemblyName>
-
     <RootNamespace>NickDarvey.ServiceFabric.ConnectionStrings</RootNamespace>
   </PropertyGroup>
 
